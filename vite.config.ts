@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  base: '/Blink-Nature-Game/',
   plugins: [react()],
   // 确保 public 目录下的 assets 能被正确访问
   publicDir: 'public',
