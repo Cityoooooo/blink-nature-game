@@ -1,0 +1,673 @@
+/* ============================================================
+   SpeciesAtlas  —  物种档案详情页
+   Figma 画布参考: 1637×1023px
+   ============================================================ */
+
+.sa-root {
+  position: fixed;
+  inset: 0;
+  background: #FFFBEF;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+}
+
+/* ── 顶部导航栏 ── */
+.sa-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 72px;
+  flex-shrink: 0;
+  background: #FFFBEF;
+  border-bottom: 1.5px solid rgba(180, 140, 60, 0.25);
+}
+
+.sa-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sa-header__icon { font-size: 28px; line-height: 1; }
+
+.sa-header__titles { display: flex; flex-direction: column; }
+
+.sa-header__zh {
+  font-size: 20px;
+  color: #3D2B00;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.sa-header__en {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 11px;
+  color: rgba(100, 70, 0, 0.55);
+  letter-spacing: 2px;
+}
+
+.sa-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.sa-header__exit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF0C4;
+  border: 1.5px solid #D4A017;
+  border-radius: 24px;
+  padding: 8px 20px;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  font-size: 15px;
+  color: #5A3A00;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #C4900C;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.sa-header__exit-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 #C4900C; }
+.sa-header__exit-btn:active { transform: translateY(1px);  box-shadow: 0 1px 0 #C4900C; }
+.sa-header__exit-icon { font-size: 16px; }
+
+.sa-header__progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 220, 80, 0.2);
+  border: 1.5px solid rgba(200, 160, 0, 0.3);
+  border-radius: 12px;
+  padding: 6px 16px;
+}
+
+.sa-header__progress-label {
+  font-size: 11px;
+  color: rgba(100, 70, 0, 0.6);
+  letter-spacing: 1px;
+}
+
+.sa-header__progress-val {
+  font-size: 18px;
+  color: #5A3A00;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sa-header__progress-total {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(100, 70, 0, 0.5);
+}
+
+/* ─────────────────────────────────────────────────────
+   主体区域（主卡 : 底部卡片 ≈ 57 : 43，对应 Figma 444:334）
+   ───────────────────────────────────────────────────── */
+.sa-main {
+  flex: 57;
+  min-height: 0;
+  display: flex;
+  padding: 16px 36px 10px;
+  overflow: visible;    /* 允许徽章悬浮叠出大框 */
+  position: relative;
+}
+
+/* 黄色圆角大框：5px 描边 #FFD200，内部 #FCFCFC */
+.sa-main-card {
+  flex: 1;
+  display: flex;
+  position: relative;
+  border: 5px solid #FFD200;
+  border-radius: 20px;
+  background: #FCFCFC;
+  overflow: hidden;
+}
+
+/* ── 左侧卡通大图（占主卡约 39%） ── */
+.sa-photo-wrap {
+  position: relative;
+  width: 39%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sa-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* 右侧遮罩：纯色 75% #FFFFFF */
+.sa-photo__fade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: #FFFFFF;
+  opacity: 0.50;
+  pointer-events: none;
+}
+
+/* ── 右侧信息区 ──
+   Figma 信息面板: 872×394px
+   三块布局: 名字(100px) + 30px gap + 声学/描述(136px) + 44px gap + 属性(84px) = 394px
+   ─────────────────────────────────────────────────────────────────────────── */
+.sa-info {
+  flex: 1;
+  padding: 24px 24px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  /* 不使用 gap，每个子块通过 margin-top 精确控制间距 */
+  overflow-y: auto;
+  scrollbar-width: none;
+  background: #FFFDF7;
+}
+.sa-info::-webkit-scrollbar { display: none; }
+
+/* ── ① 物种名块（约 100px）── */
+.sa-info__names { line-height: 1.1; }
+
+.sa-info__name-zh {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 56px;
+  color: #2A1800;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.05;
+}
+
+.sa-info__name-en {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 22px;
+  color: rgba(80, 50, 0, 0.6);
+  margin: 6px 0 0;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+/* ── ② 声学/栖息地卡行（约 88px）+ 声音描述（36px）= 136px ──
+   margin-top: 30px（与名字块的间距）
+   ─────────────────────────────────────────────────────────── */
+.sa-info__cards-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+/* 单张信息卡：行布局（标题 24px + 副标题 12px，需略增高） */
+.sa-info-card {
+  flex: 1;
+  min-height: 102px;
+  height: auto;
+  border-radius: 12px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sa-info-card--sound {
+  border: 3px solid rgba(100, 160, 255, 0.45);
+  background: rgba(210, 230, 255, 0.28);
+}
+
+.sa-info-card--habitat {
+  border: 3px solid rgba(255, 190, 60, 0.5);
+  background: rgba(255, 240, 180, 0.35);
+}
+
+/* 左侧：图标 + 标题/副标题（纵向） */
+.sa-info-card__head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.sa-info-card__icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+.sa-info-card__titles { display: flex; flex-direction: column; }
+
+.sa-info-card__title {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 23px;
+  color: #2A1800;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.sa-info-card__subtitle {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 12px;
+  color: rgba(80, 50, 0, 0.5);
+  letter-spacing: 1.5px;
+  font-weight: 400;
+}
+
+/* 声学卡：蓝色标题 */
+.sa-info-card--sound .sa-info-card__title {
+  color: #4A8FF5;
+}
+.sa-info-card--sound .sa-info-card__subtitle {
+  color: rgba(74, 143, 245, 0.65);
+}
+
+/* 栖息地卡：琥珀黄标题 */
+.sa-info-card--habitat .sa-info-card__title {
+  color: #C88A00;
+}
+.sa-info-card--habitat .sa-info-card__subtitle {
+  color: rgba(200, 138, 0, 0.65);
+}
+
+/* 播放按钮（声学卡右侧） */
+.sa-play-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #4A8FF5;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 9px 18px;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #2B68CC;
+  transition: transform 0.1s, box-shadow 0.1s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.sa-play-btn:hover       { transform: translateY(-1px); box-shadow: 0 4px 0 #2B68CC; }
+.sa-play-btn:active      { transform: translateY(1px);  box-shadow: 0 1px 0 #2B68CC; }
+.sa-play-btn--playing    { background: #E06060; box-shadow: 0 3px 0 #B04040; }
+.sa-play-btn--playing:hover { box-shadow: 0 4px 0 #B04040; }
+
+/* 栖息地详情（右侧纵向两行） */
+.sa-habitat-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+}
+
+.sa-habitat-detail__name {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 18px;
+  color: #3D2000;
+  font-weight: 400;
+}
+
+.sa-habitat-detail__meta {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  color: #818EA4;
+}
+
+/* 声音描述（与卡行同属一个 136px 块，间距 12px） */
+.sa-info__sound-desc {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 22px;
+  color: #a5a5a5;
+  line-height: 1.5;
+  margin: 12px 0 0;
+  font-weight: 400;
+}
+
+.sa-info__sound-bar {
+  color: #ADADAD;
+  margin-right: 4px;
+}
+
+/* ── ③ 4格属性（84px）──
+   margin-top: 44px（与上方块的间距）
+   ─────────────────────────────────── */
+.sa-stats {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* 浅蓝灰圆角卡片，无描边 */
+.sa-stat {
+  flex: 1;
+  background: #EDF4FB;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 上方区域：属性值文字 */
+.sa-stat__upper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px 8px;
+}
+
+.sa-stat__value {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 20px;
+  color: #2A3A4A;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* 分割线 */
+.sa-stat__divider {
+  height: 2px;
+  background: #B8D5EA;
+  margin: 0 10px;
+  flex-shrink: 0;
+}
+
+/* 下方区域：图标 + 标签 */
+.sa-stat__lower {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 8px 8px;
+  flex-shrink: 0;
+}
+
+.sa-stat__icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sa-stat__label {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-size: 15px;
+  color: #8BBAD4;
+  line-height: 1;
+}
+
+/* 濒危徽章：顶边和右边与黄色大框外边缘对齐 */
+.sa-conservation-badge {
+  position: absolute;
+  top: 18.5px;    /* = sa-main padding-top，对齐黄框上边缘 */
+  right: 80px;  /* = sa-main padding-right，对齐黄框右边缘 */
+  width:80px;
+  height: 80px;
+  z-index: 10;
+}
+
+.sa-conservation-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
+}
+
+/* ─────────────────────────────────────────────────────
+   底部收集卡片区（约占 43%，对应 Figma 334px）
+   ───────────────────────────────────────────────────── */
+.sa-cards-section {
+  flex: 43;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 36px 10px;
+  background: rgba(255, 240, 180, 0.3);
+  border-top: 1.5px solid rgba(180, 140, 60, 0.2);
+  position: relative;   /* 背景图绝对定位的参照 */
+}
+
+.sa-cards-row {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3.8%;              /* Figma 4 卡间距 60px / 1517px ≈ 3.96% */
+  position: relative;
+  z-index: 1;             /* 确保卡片显示在背景图之上 */
+}
+
+/* 卡片区装饰背景图：绝对定位撑满整个 sa-cards-section */
+.sa-cards-bg {
+  position: absolute;
+  /* 左右与黄色大框外边缘对齐：抵消父容器 padding 36px */
+  left:0px;
+  right: 0px;
+  top: 0;
+  bottom: 0;
+  width: calc(100% -2px);
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.80;
+}
+
+/* 单张收集卡：高度撑满卡片区，宽度由 aspect-ratio 决定（正方形） */
+.sa-card {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1;
+  max-height: 320px;      /* 防止在大屏上过大 */
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.sa-card__bg,
+.sa-card__border,
+.sa-card__badge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sa-card__bg     { z-index: 0; }
+.sa-card__border { z-index: 3; }
+.sa-card__badge  { z-index: 4; }
+
+/* 图片区：对应 AnimalCard top:32/488=6.6%, h:280/488=57.4% */
+.sa-card__photo {
+  position: absolute;
+  top: 6.6%;
+  left: 6.6%;
+  right: 6.6%;
+  height: 57.4%;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 2px;
+}
+
+.sa-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* 锁定遮罩 */
+.sa-card--locked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 2;
+  border-radius: 2px;
+}
+
+.sa-card__lock-overlay {
+  position: absolute;
+  top: 6.6%;
+  left: 6.6%;
+  right: 6.6%;
+  height: 57.4%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.sa-card__lock-icon { font-size: 22px; opacity: 0.7; }
+
+.sa-card__lock-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+/* ── 动物名叠层：top:58% left:26% ── */
+.sa-card__name-overlay {
+  position: absolute;
+  top: 58%;
+  left: 26%;
+  right: 26%;
+  height: 8.6%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.sa-card__name-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 17px;
+  color: #2A1E0A;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ── 知识文字区：top:68.9% bottom:11.9% ── */
+.sa-card__knowledge-area {
+  position: absolute;
+  top: 68.9%;
+  left: 12.7%;
+  right: 12.7%;
+  bottom: 11.9%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sa-card__knowledge-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 10px;
+  color: #2A1E10;
+  line-height: 1.5;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* ── 知识标签：top:89.3% ── */
+.sa-card__knowledge-label {
+  position: absolute;
+  top: 89.3%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 8px;
+  color: #8A7A60;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  z-index: 5;
+  pointer-events: none;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+/* ── 底部状态栏 ── */
+.sa-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 6px 32px;
+  background: #FFF0C4;
+  border-top: 1px solid rgba(180, 140, 60, 0.2);
+  font-family: 'Noto Sans SC', monospace;
+  font-size: 10px;
+  color: rgba(80, 50, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.sa-footer__live {
+  margin-left: auto;
+  color: #2E8B57;
+  font-weight: 700;
+}
+
+/* ── 响应式 ── */
+@media (max-width: 1200px) {
+  .sa-info__name-zh   { font-size: 46px; }
+  .sa-info__name-en   { font-size: 18px; }
+  .sa-info__sound-desc { font-size: 15px; }
+  .sa-stat__value  { font-size: 16px; }
+  .sa-stat__label  { font-size: 13px; }
+  .sa-stats        { margin-top: 28px; }
+  .sa-info__cards-row { margin-top: 20px; }
+}
+
+@media (max-width: 900px) {
+  .sa-main  { padding: 10px 20px 8px; }
+  .sa-cards-section { padding: 8px 20px 8px; }
+  .sa-info__name-zh { font-size: 36px; }
+  .sa-info__name-en { font-size: 15px; }
+  .sa-info-card     { min-height: 92px; }
+  .sa-info__sound-desc { font-size: 13px; }
+  .sa-stat__value  { font-size: 14px; }
+  .sa-stat__label  { font-size: 12px; }
+  .sa-stats        { gap: 12px; margin-top: 20px; }
+  .sa-info__cards-row { margin-top: 14px; gap: 10px; }
+}
+
+@media (max-width: 680px) {
+  .sa-photo-wrap    { width: 34%; }
+  .sa-info          { padding: 16px 14px 12px; }
+  .sa-info__name-zh { font-size: 28px; }
+  .sa-info__cards-row { flex-direction: column; height: auto; gap: 8px; margin-top: 10px; }
+  .sa-info-card     { min-height: 80px; padding-top: 10px; padding-bottom: 10px; }
+  .sa-stats        { gap: 6px; margin-top: 12px; }
+  .sa-stat__value  { font-size: 12px; }
+  .sa-stat__label  { font-size: 11px; }
+  .sa-stat__icon   { width: 14px; height: 14px; }
+  .sa-footer        { gap: 16px; font-size: 9px; }
+  .sa-card__name-text        { font-size: 8px; }
+  .sa-card__knowledge-text   { font-size: 5.5px; -webkit-line-clamp: 2; }
+  .sa-card__knowledge-label  { font-size: 4.5px; }
+}

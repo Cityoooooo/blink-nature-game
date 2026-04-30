@@ -1,0 +1,278 @@
+/* ============================================================
+   Bestiary  —  珍稀物种图鉴总览
+   奶油色暖调游戏风格，与 SpeciesAtlas 统一
+   ============================================================ */
+
+.bestiary {
+  min-height: 100vh;
+  background: #FFFBEF;
+  color: #3D2B00;
+  padding: 0 0 60px;
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+}
+
+/* ── 顶部导航栏 ── */
+.bestiary__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 72px;
+  border-bottom: 1.5px solid rgba(180, 140, 60, 0.25);
+  background: #FFFBEF;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.bestiary__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bestiary__brand-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.bestiary__brand-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.bestiary__brand-zh {
+  font-size: 20px;
+  color: #3D2B00;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.bestiary__brand-en {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 11px;
+  color: rgba(100, 70, 0, 0.55);
+  letter-spacing: 2px;
+}
+
+.bestiary__back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF0C4;
+  border: 1.5px solid #D4A017;
+  border-radius: 24px;
+  padding: 8px 20px;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  font-size: 15px;
+  color: #5A3A00;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #C4900C;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.bestiary__back:hover  { transform: translateY(-1px); box-shadow: 0 4px 0 #C4900C; }
+.bestiary__back:active { transform: translateY(1px);  box-shadow: 0 1px 0 #C4900C; }
+
+.bestiary__count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 220, 80, 0.2);
+  border: 1.5px solid rgba(200, 160, 0, 0.3);
+  border-radius: 12px;
+  padding: 6px 18px;
+  font-size: 18px;
+  color: #5A3A00;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.bestiary__count-label {
+  font-size: 11px;
+  color: rgba(100, 70, 0, 0.6);
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+
+.bestiary__count-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: #5A3A00;
+  line-height: 1;
+}
+
+.bestiary__count-total {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(100, 70, 0, 0.5);
+}
+
+/* ── 场景筛选栏 ── */
+.bestiary__filter {
+  display: flex;
+  gap: 10px;
+  padding: 16px 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(180, 140, 60, 0.12);
+}
+
+.bestiary__filter::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  background: #FFF8E0;
+  border: 1.5px solid rgba(200, 160, 0, 0.35);
+  color: #7A5800;
+  padding: 7px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  font-size: 15px;
+  white-space: nowrap;
+  transition: all 0.15s;
+  box-shadow: 0 2px 0 rgba(180, 130, 0, 0.2);
+}
+
+.filter-btn:hover {
+  background: #FFF0B0;
+  border-color: rgba(200, 160, 0, 0.6);
+}
+
+.filter-btn.active {
+  background: #FFD200;
+  border-color: #C4900C;
+  color: #3D2000;
+  box-shadow: 0 2px 0 #C4900C;
+}
+
+/* ── 动物网格：固定 9 列 ── */
+.bestiary__grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 12px;
+  padding: 20px 32px;
+}
+
+/* 已发现卡片：正方形（aspect-ratio: 1） */
+.bestiary-card {
+  aspect-ratio: 1;
+  border-radius: 16px;
+  border: 2px solid rgba(180, 140, 60, 0.2);
+  cursor: pointer;
+  text-align: center;
+  padding: 10px 6px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: none;
+  overflow: hidden;
+}
+
+.bestiary-card.discovered {
+  background: #FFFFFF;
+  border-color: rgba(180, 140, 60, 0.25);
+  box-shadow: 0 2px 8px rgba(180, 120, 0, 0.08);
+}
+
+.bestiary-card.discovered:hover {
+  border-color: #FFD200;
+  box-shadow: 0 4px 16px rgba(180, 120, 0, 0.18);
+}
+
+.bestiary-card.undiscovered {
+  background: rgba(255, 248, 220, 0.45);
+  border: 1.5px dashed rgba(180, 140, 60, 0.25);
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* 头像区：宽度随卡片缩放 */
+.bestiary-card__img-wrap {
+  position: relative;
+  width: 55%;
+  aspect-ratio: 1;
+}
+
+.bestiary-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* 濒危等级：彩色文字胶囊标签 */
+.bestiary-card__conservation {
+  position: absolute;
+  top: -5px;
+  right: -30px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  padding: 2px 5px;
+  border-radius: 6px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* 未知占位 */
+.bestiary-card__unknown {
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(200, 160, 60, 0.1);
+  border: 1.5px dashed rgba(180, 140, 60, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: rgba(180, 140, 60, 0.35);
+}
+
+/* 动物名 */
+.bestiary-card__name {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: #2A1800;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* 场景名 */
+.bestiary-card__scene {
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  font-size: 12px;
+  color: rgba(120, 80, 0, 0.6);
+  margin: 0;
+  background: rgba(255, 210, 0, 0.10);
+  padding: 2px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* 进度点 */
+.bestiary-card__photos {
+  display: flex;
+  gap: 5px;
+}
+
+.photo-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(180, 140, 60, 0.2);
+}
+
+.photo-dot.unlocked {
+  background: #FFD200;
+  box-shadow: 0 0 4px rgba(255, 210, 0, 0.5);
+}

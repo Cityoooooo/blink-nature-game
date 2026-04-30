@@ -1,0 +1,258 @@
+/* ============================================================
+   AnimalCard  —  SVG 叠层游戏卡片
+   卡片固定尺寸 488×488px，小屏通过 scale 缩放
+   ============================================================ */
+
+/* ── 全屏遮罩 ── */
+.card-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', 'Noto Sans SC', sans-serif;
+}
+
+/* ── 纵向布局容器（提示占位 + 卡片 + 按钮） ── */
+.card-outer-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  transform-origin: top center;
+  /* 阴影放在外层，不会向下扩散遮挡按钮 */
+  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.65));
+}
+
+/* 提示文字固定高度占位区：文字高度(≈17px) + 与卡片间距(24px) = 41px */
+.card-hint-slot {
+  height: 41px;
+  display: flex;
+  align-items: flex-end;   /* 提示文字贴近底部（卡片一侧） */
+  flex-shrink: 0;
+  transform: translateY(-20px);
+}
+
+/* ============================================================
+   游戏卡片主体 — 固定 488×488
+   ============================================================ */
+.animal-card {
+  position: relative;
+  width:  488px;
+  height: 488px;
+  flex-shrink: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* ──────────────────────────────────────
+   层 0: 场景背景渐变 SVG
+   ────────────────────────────────────── */
+.card-svg-bg {
+  position: absolute;
+  inset: 0;
+  width:  100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ──────────────────────────────────────
+   层 2: 动物图片区
+   对应 SVG 内图片遮罩：top:32 left:32 right:32 h:280
+   ────────────────────────────────────── */
+.card-photo {
+  position: absolute;
+  top:   32px;
+  left:  32px;
+  right: 32px;
+  height: 280px;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 2px;
+}
+
+.card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* ──────────────────────────────────────
+   层 3: SVG 边框（含文字面板、横幅形状）
+   ────────────────────────────────────── */
+.card-svg-border {
+  position: absolute;
+  inset: 0;
+  width:  100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ──────────────────────────────────────
+   层 4: SVG 濒危等级徽章
+   与边框同尺寸，自动对齐
+   ────────────────────────────────────── */
+.card-svg-badge {
+  position: absolute;
+  inset: 0;
+  width:  100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ──────────────────────────────────────
+   层 5a: 动物名称文字
+   叠在梯形横幅奶油色区域（y:287~329，x:127~361）
+   ────────────────────────────────────── */
+.card-name-overlay {
+  position: absolute;
+  top:   283px;
+  left:  127px;
+  right: 127px;   /* 488 - 361 = 127 */
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.card-name-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 24px;
+  color: #2A1E0A;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ──────────────────────────────────────
+   层 5b: 知识文字区
+   叠在白色面板内（横幅下方 y:336 ~ y:447）
+   ────────────────────────────────────── */
+.card-text-content {
+  position: absolute;
+  top:    336px;
+  left:   62px;        /* 面板内留边距：62-32=30px */
+  right:  62px;
+  bottom: 58px;        /* 488-58=430，标签上方留出空间 */
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;   /* 知识文字上下居中 */
+  pointer-events: none;
+}
+
+.card-knowledge-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 17.5px;
+  color: #2A1E10;
+  line-height: 1.6;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.card-knowledge-text::-webkit-scrollbar {
+  display: none;
+}
+
+.card-knowledge-label {
+  position: absolute;
+  top: 436px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 15px;
+  color: #8A7A60;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ============================================================
+   卡片下方按钮区（固定 488px 宽）
+   ============================================================ */
+.card-btn-row {
+  display: flex;
+  gap: 8px;
+  width: 488px;
+  margin-top: 30px;
+}
+
+.card-btn {
+  flex: 1;
+  height: 52px;
+  border: none;
+  border-radius: 26px;
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'ZCOOL KuaiLe', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: opacity 0.15s;
+}
+
+.card-btn--continue {
+  background: #333333;
+  color: #FFFFFF;
+  box-shadow: 0 4px 0 #111, 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.card-btn--bestiary {
+  background: #FFD200;
+  color: #1A1200;
+  box-shadow: 0 4px 0 #A88B00, 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.card-btn:active {
+  opacity: 0.85;
+}
+
+/* ── 双眨眼提示文字 ── */
+.card-hint {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  letter-spacing: 0.03em;
+  animation: hint-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 1.0; }
+}
+
+/* ============================================================
+   响应式：通过 scale 等比缩放整个 card-outer-wrap
+   ============================================================ */
+
+/* 中等屏幕（ 488px < 宽 < 560px）：轻微缩放 */
+@media (max-width: 560px) {
+  .card-outer-wrap {
+    transform: scale(0.85);
+    /* 缩放后视觉高度减少，补偿 margin 避免溢出 */
+    margin-bottom: calc((0.85 - 1) * (488px + 14px + 52px + 14px + 24px));
+  }
+}
+
+/* 小屏（手机竖屏）*/
+@media (max-width: 420px) {
+  .card-outer-wrap {
+    transform: scale(0.70);
+    margin-bottom: calc((0.70 - 1) * (488px + 14px + 52px + 14px + 24px));
+  }
+}
