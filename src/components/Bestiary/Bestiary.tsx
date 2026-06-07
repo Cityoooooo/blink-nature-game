@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useGameStore } from '../../store/gameStore'
-import animalsData from '../../data/animals.json'
+import animalsData from '../../data/animalsData'
 import './Bestiary.css'
 
 const CONSERVATION_COLOR: Record<string, string> = {

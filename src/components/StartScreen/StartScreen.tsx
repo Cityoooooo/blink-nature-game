@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
 import { useGameStore } from '../../store/gameStore'
+import { publicAsset } from '../../utils/publicAsset'
 import './StartScreen.css'
 
-const BG_VIDEO = `/assets/${encodeURIComponent('begin video.mp4')}`
+const BG_VIDEO = publicAsset(`/assets/${encodeURIComponent('begin video.mp4')}`)
 
 export function StartScreen() {
   const { enterGame, goToCalibration } = useGameStore()

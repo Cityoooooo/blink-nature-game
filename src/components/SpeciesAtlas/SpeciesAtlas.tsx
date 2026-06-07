@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useGameStore } from '../../store/gameStore'
-import animalsData from '../../data/animals.json'
+import animalsData from '../../data/animalsData'
+import { publicAsset } from '../../utils/publicAsset'
 import './SpeciesAtlas.css'
 
 const CONSERVATION_LABEL: Record<string, string> = {
@@ -32,9 +33,9 @@ function CollectCard({
   sceneId: string
   conservationCode: string
 }) {
-  const bgSvg     = `/assets/cards/bg-${sceneId}.svg`
-  const borderSvg = `/assets/cards/border-${sceneId}.svg`
-  const badgeSvg  = `/assets/cards/badge-${conservationCode}.svg`
+  const bgSvg     = publicAsset(`/assets/cards/bg-${sceneId}.svg`)
+  const borderSvg = publicAsset(`/assets/cards/border-${sceneId}.svg`)
+  const badgeSvg  = publicAsset(`/assets/cards/badge-${conservationCode}.svg`)
 
   return (
     <div className={`sa-card ${unlocked ? 'sa-card--unlocked' : 'sa-card--locked'}`}>
@@ -163,7 +164,7 @@ export function SpeciesAtlas() {
               {/* 声学特征卡 */}
               <div className="sa-info-card sa-info-card--sound">
                 <div className="sa-info-card__head">
-                  <img className="sa-info-card__icon" src="/assets/icons/icon-acoustic.svg" alt="" aria-hidden />
+                  <img className="sa-info-card__icon" src={publicAsset('/assets/icons/icon-acoustic.svg')} alt="" aria-hidden />
                   <div className="sa-info-card__titles">
                     <div className="sa-info-card__title">声学特征</div>
                     <div className="sa-info-card__subtitle">ACOUSTIC FEATURES</div>
@@ -181,7 +182,7 @@ export function SpeciesAtlas() {
               {/* 主要栖息地卡 */}
               <div className="sa-info-card sa-info-card--habitat">
                 <div className="sa-info-card__head">
-                  <img className="sa-info-card__icon" src="/assets/icons/icon-habitat.svg" alt="" aria-hidden />
+                  <img className="sa-info-card__icon" src={publicAsset('/assets/icons/icon-habitat.svg')} alt="" aria-hidden />
                   <div className="sa-info-card__titles">
                     <div className="sa-info-card__title">主要栖息地</div>
                     <div className="sa-info-card__subtitle">PRIMARY HABITAT</div>
@@ -219,7 +220,7 @@ export function SpeciesAtlas() {
                   <div className="sa-stat__lower">
                     <img
                       className="sa-stat__icon"
-                      src={`/assets/icons/icon-${key}.svg`}
+                      src={publicAsset(`/assets/icons/icon-${key}.svg`)}
                       alt=""
                       aria-hidden
                     />
@@ -235,7 +236,7 @@ export function SpeciesAtlas() {
         {/* 濒危徽章：独立 SVG，悬浮在黄色大框右上角 */}
         <div className="sa-conservation-badge">
           <img
-            src={`/assets/icons/badge-standalone-${animal.conservationCode}.svg`}
+            src={publicAsset(`/assets/icons/badge-standalone-${animal.conservationCode}.svg`)}
             alt={CONSERVATION_LABEL[animal.conservationCode]}
           />
         </div>
@@ -244,7 +245,7 @@ export function SpeciesAtlas() {
       {/* ── 底部收集卡片行 ── */}
       <section className="sa-cards-section">
         {/* 装饰背景图（绝对定位在卡片区底层） */}
-        <img className="sa-cards-bg" src="/assets/ui/cards-bg.png" alt="" aria-hidden />
+        <img className="sa-cards-bg" src={publicAsset('/assets/ui/cards-bg.png')} alt="" aria-hidden />
         <div className="sa-cards-row">
           {allPhotos.map((src, i) => {
             const isFirst      = i === 0

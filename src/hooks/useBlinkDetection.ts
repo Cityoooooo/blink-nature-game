@@ -1,14 +1,15 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { FaceLandmarker, FilesetResolver, type FaceLandmarkerResult } from '@mediapipe/tasks-vision'
+import { publicAsset } from '../utils/publicAsset'
 
 const LEFT_EYE_INDICES = [362, 385, 387, 263, 373, 380]
 const RIGHT_EYE_INDICES = [33, 160, 158, 133, 153, 144]
 
 const EAR_CLOSED_THRESHOLD = 0.20
-// 需要连续 N 帧低于阈值才确认为闭眼，减少光线波动导致的误触
-const CLOSED_FRAMES_THRESHOLD = 2
-// 超过此帧数仍未睁眼则不算眨眼（慢闭眼/持续闭眼）
-const BLINK_MAX_CLOSED_FRAMES = 18
+// 持续低于阈值达到此时长（ms）才确认为闭眼，减少光线波动导致的误触
+const EYE_CLOSE_CONFIRM_MS = 50
+// 超过此时长（ms）仍未睁眼则不算眨眼（慢闭眼/持续闭眼）
+const BLINK_MAX_CLOSE_MS = 300
 // 双眨眼时间窗口（毫秒）：第一下睁眼后，此时间内再眨一次算双眨眼
 const DOUBLE_BLINK_WINDOW_MS = 700
 
@@ -66,8 +67,8 @@ export function useBlinkDetection(
   const callbacksRef = useRef(options)
   const landmarkOverlayRef = useRef(options.landmarkOverlay)
 
-  // 眨眼原始状态
-  const closedFramesRef = useRef(0)
+  // 眨眼原始状态：0 表示当前不在闭眼段
+  const closeStartTimeRef = useRef<number>(0)
   const wasClosedRef = useRef(false)
 
   // 双眨眼追踪（仅 double 模式使用）
@@ -91,7 +92,7 @@ export function useBlinkDetection(
       doubleBlinkTimerRef.current = null
     }
     // 重置眼部状态，避免残留的"闭眼"判断影响新阶段
-    closedFramesRef.current = 0
+    closeStartTimeRef.current = 0
     wasClosedRef.current = false
   }, [blinkMode])
 
@@ -102,12 +103,11 @@ export function useBlinkDetection(
     async function init() {
       try {
         const filesetResolver = await FilesetResolver.forVisionTasks(
-          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+          publicAsset('/mediapipe/wasm')
         )
         const landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
           baseOptions: {
-            modelAssetPath:
-              'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+            modelAssetPath: publicAsset('/mediapipe/face_landmarker.task'),
             delegate: 'GPU',
           },
           runningMode: 'VIDEO',
@@ -229,22 +229,29 @@ export function useBlinkDetection(
       const avgEAR = (leftEAR + rightEAR) / 2
       const isClosed = avgEAR < EAR_CLOSED_THRESHOLD
 
+      const now = performance.now()
+
       if (isClosed) {
-        closedFramesRef.current += 1
-        if (closedFramesRef.current === CLOSED_FRAMES_THRESHOLD) {
+        // 首帧低于阈值时记录起始时间
+        if (closeStartTimeRef.current === 0) {
+          closeStartTimeRef.current = now
+        }
+        // 持续低于阈值达到确认时长后触发一次 onEyeClose
+        if (!wasClosedRef.current && now - closeStartTimeRef.current >= EYE_CLOSE_CONFIRM_MS) {
           wasClosedRef.current = true
           setEyeState('closed')
           callbacksRef.current.onEyeClose?.()
         }
       } else {
         if (wasClosedRef.current) {
-          const isBlink = closedFramesRef.current <= BLINK_MAX_CLOSED_FRAMES
+          const closeDuration = now - closeStartTimeRef.current
+          const isBlink = closeDuration <= BLINK_MAX_CLOSE_MS
           wasClosedRef.current = false
           setEyeState('open')
           callbacksRef.current.onEyeOpen?.()
           if (isBlink) handleBlink()
         }
-        closedFramesRef.current = 0
+        closeStartTimeRef.current = 0
       }
 
       drawLandmarkOverlay(landmarks)

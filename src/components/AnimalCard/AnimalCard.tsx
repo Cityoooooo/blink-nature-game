@@ -1,7 +1,8 @@
 import { useRef, useLayoutEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useGameStore } from '../../store/gameStore'
-import animalsData from '../../data/animals.json'
+import animalsData from '../../data/animalsData'
+import { publicAsset } from '../../utils/publicAsset'
 import './AnimalCard.css'
 
 /* ─── 濒危等级 ─── */
@@ -59,9 +60,9 @@ export function AnimalCard({ onContinue, onBestiary, doubleBinkHint = false }: A
     : animal.baseImage
 
   const sceneId   = currentSceneId ?? 'savanna'
-  const bgSvg     = `/assets/cards/bg-${sceneId}.svg`
-  const borderSvg = `/assets/cards/border-${sceneId}.svg`
-  const badgeSvg  = `/assets/cards/badge-${animal.conservationCode}.svg`
+  const bgSvg     = publicAsset(`/assets/cards/bg-${sceneId}.svg`)
+  const borderSvg = publicAsset(`/assets/cards/border-${sceneId}.svg`)
+  const badgeSvg  = publicAsset(`/assets/cards/badge-${animal.conservationCode}.svg`)
 
   const knowledgeLabel = isFirstCapture ? '神话传说' : '物种冷知识'
 

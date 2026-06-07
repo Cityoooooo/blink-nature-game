@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useGameStore } from '../../store/gameStore'
-import animalsData from '../../data/animals.json'
+import animalsData from '../../data/animalsData'
 import './SceneSelector.css'
 
 const SCENE_EMOJIS: Record<string, string> = {
@@ -48,7 +48,7 @@ export function SceneSelector() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.55)), url(/assets/scenes/${scene.id}/bg.jpg)`,
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.55)), url('${scene.bgImage}')`,
               }}
             >
               <span className="scene-card__emoji">{SCENE_EMOJIS[scene.id]}</span>

@@ -1,13 +1,34 @@
+import { lazy, Suspense } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useGameStore } from './store/gameStore'
-import { GameScene } from './components/GameScene/GameScene'
 import { SceneSelector } from './components/SceneSelector/SceneSelector'
 import { Bestiary } from './components/Bestiary/Bestiary'
 import { SpeciesAtlas } from './components/SpeciesAtlas/SpeciesAtlas'
 import { StartScreen } from './components/StartScreen/StartScreen'
-import { CalibrationScreen } from './components/CalibrationScreen/CalibrationScreen'
 import { ProfileScreen } from './components/ProfileScreen/ProfileScreen'
 import ClickSpark from './components/ClickSpark/ClickSpark'
+
+const CalibrationScreen = lazy(() =>
+  import('./components/CalibrationScreen/CalibrationScreen').then((m) => ({
+    default: m.CalibrationScreen,
+  })),
+)
+
+const GameScene = lazy(() =>
+  import('./components/GameScene/GameScene').then((m) => ({
+    default: m.GameScene,
+  })),
+)
+
+const lazyScreenFallback = (
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: '#FFFBEF',
+    }}
+  />
+)
 
 function App() {
   const { phase } = useGameStore()
@@ -57,7 +78,9 @@ function App() {
             transition={{ duration: 0.4 }}
             style={{ position: 'fixed', inset: 0, zIndex: 5 }}
           >
-            <CalibrationScreen />
+            <Suspense fallback={lazyScreenFallback}>
+              <CalibrationScreen />
+            </Suspense>
           </motion.div>
         )}
 
@@ -96,7 +119,9 @@ function App() {
             transition={{ duration: 0.5 }}
             style={{ position: 'fixed', inset: 0 }}
           >
-            <GameScene />
+            <Suspense fallback={lazyScreenFallback}>
+              <GameScene />
+            </Suspense>
           </motion.div>
         )}
 

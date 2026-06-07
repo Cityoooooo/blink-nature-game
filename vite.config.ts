@@ -22,5 +22,15 @@ export default defineConfig(({ command }) => ({
   },
   build: {
     sourcemap: false,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/three')) return 'three'
+          if (id.includes('node_modules/postprocessing')) return 'postprocessing'
+          if (id.includes('@mediapipe')) return 'mediapipe'
+        },
+      },
+    },
   },
 }))

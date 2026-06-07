@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import animalsData from '../data/animals.json'
+import animalsData from '../data/animalsData'
 
 export type GamePhase =
   | 'start'          // 游戏开始界面

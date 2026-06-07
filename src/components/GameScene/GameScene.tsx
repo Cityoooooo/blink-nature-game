@@ -5,10 +5,11 @@ import { BlinkDetector } from '../BlinkDetector/BlinkDetector'
 import { AnimalCard } from '../AnimalCard/AnimalCard'
 import { ViewfinderRing } from '../ViewfinderRing/ViewfinderRing'
 import { useAudio } from '../../hooks/useAudio'
-import animalsData from '../../data/animals.json'
+import animalsData from '../../data/animalsData'
+import { publicAsset } from '../../utils/publicAsset'
 import './GameScene.css'
 
-const CAPTURE_SFX = '/assets/sfx/capture.mp3'
+const CAPTURE_SFX = publicAsset('/assets/sfx/capture.mp3')
 
 type SceneData = (typeof animalsData.scenes)[number] & {
   navName?: string
@@ -112,6 +113,14 @@ export function GameScene() {
     setEyesClosed(false)
     if (phase === 'animal-appears') {
       setPhase('blink-capture')
+    }
+    // eyes-closed 阶段睁眼 → 清除倒计时，允许用户重新闭眼再触发
+    if (phase === 'eyes-closed') {
+      if (spawnTimerRef.current) {
+        clearTimeout(spawnTimerRef.current)
+        spawnTimerRef.current = null
+      }
+      hasSpawnedRef.current = false
     }
   }, [phase, setPhase])
 
