@@ -155,9 +155,9 @@
   padding: 20px 32px;
 }
 
-/* 已发现卡片：正方形（aspect-ratio: 1） */
+/* 卡片：宽度随网格列缩放，高度由内容撑开 */
 .bestiary-card {
-  aspect-ratio: 1;
+  width: 100%;
   border-radius: 16px;
   border: 2px solid rgba(180, 140, 60, 0.2);
   cursor: pointer;
@@ -166,11 +166,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 5px;
   transition: border-color 0.2s, box-shadow 0.2s;
   background: none;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .bestiary-card.discovered {
