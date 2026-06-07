@@ -157,6 +157,7 @@
 
 /* 卡片：宽度随网格列缩放，高度由内容撑开 */
 .bestiary-card {
+  position: relative;
   width: 100%;
   border-radius: 16px;
   border: 2px solid rgba(180, 140, 60, 0.2);
@@ -205,11 +206,12 @@
   border-radius: 50%;
 }
 
-/* 濒危等级：彩色文字胶囊标签 */
+/* 濒危等级：卡片右上角胶囊标签 */
 .bestiary-card__conservation {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
   font-size: 9px;
   font-weight: 700;
   color: #fff;

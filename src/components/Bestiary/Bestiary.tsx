@@ -82,14 +82,14 @@ export function Bestiary() {
             >
               {discovered ? (
                 <>
+                  <span
+                    className="bestiary-card__conservation"
+                    style={{ background: CONSERVATION_COLOR[animal.conservationCode] }}
+                  >
+                    {animal.conservationCode}
+                  </span>
                   <div className="bestiary-card__img-wrap">
                     <img src={animal.cartoonImage} alt={animal.nameZh} />
-                    <span
-                      className="bestiary-card__conservation"
-                      style={{ background: CONSERVATION_COLOR[animal.conservationCode] }}
-                    >
-                      {animal.conservationCode}
-                    </span>
                   </div>
                   <p className="bestiary-card__name">{animal.nameZh}</p>
                   <p className="bestiary-card__scene">{sceneNameZh}</p>
